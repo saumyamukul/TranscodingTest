@@ -17,6 +17,9 @@
 		29A1DF6725CBB6E4000A9A84 /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF6625CBB6E4000A9A84 /* TableViewCell.swift */; };
 		29A1DF7025CF0560000A9A84 /* ConsoleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29A1DF6F25CF0560000A9A84 /* ConsoleViewController.swift */; };
 		29DEAA1225D9A787002AECEC /* BlePeripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29DEAA1125D9A787002AECEC /* BlePeripheral.swift */; };
+		C22C97172939BD4E006F7C6C /* 720x962.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C22C97162939BD49006F7C6C /* 720x962.mp4 */; };
+		C2CAD58128B6E874007AE9D0 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CAD58028B6E874007AE9D0 /* AVFoundation.framework */; };
+		C2CAD58328B6ECE6007AE9D0 /* original.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C2CAD58228B6ECE6007AE9D0 /* original.mp4 */; };
 		C2CDAD3928B60034009B401D /* 480x642-20s-HEVC.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = C2CDAD3828B60034009B401D /* 480x642-20s-HEVC.mp4 */; };
 		C2CDAD4228B60A61009B401D /* libavformat.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = C2CDAD3A28B60A61009B401D /* libavformat.xcframework */; };
 		C2CDAD4328B60A61009B401D /* libavformat.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = C2CDAD3A28B60A61009B401D /* libavformat.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -72,6 +75,9 @@
 		29A1DF6625CBB6E4000A9A84 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
 		29A1DF6F25CF0560000A9A84 /* ConsoleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsoleViewController.swift; sourceTree = "<group>"; };
 		29DEAA1125D9A787002AECEC /* BlePeripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlePeripheral.swift; sourceTree = "<group>"; };
+		C22C97162939BD49006F7C6C /* 720x962.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 720x962.mp4; sourceTree = "<group>"; };
+		C2CAD58028B6E874007AE9D0 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C2CAD58228B6ECE6007AE9D0 /* original.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; name = original.mp4; path = ../../Downloads/original.mp4; sourceTree = "<group>"; };
 		C2CDAD0628B5FF2C009B401D /* libswresample.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libswresample.framework; path = "../ffmpeg-kit-full-gpl-4.5.1.LTS-ios-framework/libswresample.framework"; sourceTree = "<group>"; };
 		C2CDAD0728B5FF2C009B401D /* libavformat.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libavformat.framework; path = "../ffmpeg-kit-full-gpl-4.5.1.LTS-ios-framework/libavformat.framework"; sourceTree = "<group>"; };
 		C2CDAD0828B5FF2D009B401D /* libavdevice.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libavdevice.framework; path = "../ffmpeg-kit-full-gpl-4.5.1.LTS-ios-framework/libavdevice.framework"; sourceTree = "<group>"; };
@@ -106,6 +112,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2CAD58128B6E874007AE9D0 /* AVFoundation.framework in Frameworks */,
 				C2CDAD5628B61400009B401D /* AVFAudio.framework in Frameworks */,
 				C2CDAD4A28B60A61009B401D /* libswscale.xcframework in Frameworks */,
 				C2CDAD4228B60A61009B401D /* libavformat.xcframework in Frameworks */,
@@ -151,6 +158,8 @@
 			isa = PBXGroup;
 			children = (
 				C2CDAD3828B60034009B401D /* 480x642-20s-HEVC.mp4 */,
+				C2CAD58228B6ECE6007AE9D0 /* original.mp4 */,
+				C22C97162939BD49006F7C6C /* 720x962.mp4 */,
 				C2CDAD5328B61333009B401D /* loop.mp3 */,
 				29A1DF4725CB1D7F000A9A84 /* Demo */,
 				29A1DF4625CB1D7F000A9A84 /* Products */,
@@ -185,6 +194,7 @@
 		C2CDAD0528B5FF2C009B401D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C2CAD58028B6E874007AE9D0 /* AVFoundation.framework */,
 				C2CDAD5528B61400009B401D /* AVFAudio.framework */,
 				C2CDAD2628B5FF83009B401D /* ffmpegkit.xcframework */,
 				C2CDAD3F28B60A61009B401D /* ffmpegkit.xcframework */,
@@ -272,6 +282,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C2CAD58328B6ECE6007AE9D0 /* original.mp4 in Resources */,
+				C22C97172939BD4E006F7C6C /* 720x962.mp4 in Resources */,
 				C2CDAD3928B60034009B401D /* 480x642-20s-HEVC.mp4 in Resources */,
 				C2CDAD5428B61333009B401D /* loop.mp3 in Resources */,
 				29A1DF5525CB1D82000A9A84 /* LaunchScreen.storyboard in Resources */,
@@ -440,6 +452,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HM4K8RS9NW;
@@ -449,8 +462,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.saumya.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.saumya.test2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -461,6 +475,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HM4K8RS9NW;
@@ -470,8 +485,9 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.saumya.test;
+				PRODUCT_BUNDLE_IDENTIFIER = com.saumya.test2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

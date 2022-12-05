@@ -8,7 +8,7 @@
 import UIKit
 import CoreBluetooth
 import ffmpegkit
-import AVFAudio
+import AVFoundation
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,14 +20,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     private var timer = Timer()
     private var count: Int = 0
     private var inProgress: Bool = false
-    private var player: AVAudioPlayer?
     
     var inputUrl: URL?
     var outputUrl: URL?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        self.inputUrl = Bundle.main.url(forResource: "480x642-20s-HEVC", withExtension: "mp4")
+        self.inputUrl = Bundle.main.url(forResource: "720x962", withExtension: "mp4")
         
         
         if (inputUrl == nil) {
@@ -35,38 +34,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         NSLog("BLE Test: Finished launching")
-
+        
         // Setup BT manager
         centralManager = CBCentralManager(delegate: self, queue: nil, options: [
             CBCentralManagerOptionRestoreIdentifierKey: "SaumyaApp"])
-        
-        
-        do {
-            try AVAudioSession.sharedInstance().setCategory(
-                AVAudioSession.Category.playback,
-                options: AVAudioSession.CategoryOptions.mixWithOthers
-            )
-        }   catch let error {
-            NSLog("BLE Test: Error \(error)")
-        }
-        
-        do {
-            // Attempts to activate session so you can play audio,
-            // if other sessions have priority this will fail
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch let error {
-            NSLog("BLE Test: Error \(error)")
-        }
-        
-        let loopURL = Bundle.main.url(forResource: "loop", withExtension: "mp3")
-        do {
-            player = try AVAudioPlayer(contentsOf: loopURL!)
-            player!.numberOfLoops = -1
-            // UNCOMMENT THE NEXT LINE IF YOU WANT TO TEST TRANSCODING WITH AUDIO
-            // player!.play()
-        } catch let error {
-            NSLog("BLE Test: Error \(error)")
-        }
+
         return true
     }
     
@@ -98,21 +70,68 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func getOutputFileName() -> String {
-        // Construct a name based on current time
-        let now = Date()
-        let formatter1 = DateFormatter()
-        formatter1.dateFormat = "HH:mm:ss"
-        return formatter1.string(from: now)
+        return "output"
+    }
+    
+    func getOutputFileNameWithTimesstamp() -> String {
+        let df = DateFormatter()
+        df.dateFormat = "yyyy-MM-dd_hh:mm:ss"
+        let now = df.string(from: Date())
+        return "output"+now
+    }
+    
+    func transcodeVideoAV() {
+        let asset = AVAsset(url: inputUrl!)
+        let preset = AVAssetExportPresetHighestQuality
+        let outFileType = AVFileType.mp4
+        
+        let outputName = getOutputFileName()
+        let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
+        let outputURL = documentsDirectory!.appendingPathComponent("\(outputName).mp4" )
+
+        do {
+            try FileManager.default.removeItem(at: outputURL)
+        } catch _ as NSError {
+            NSLog("No existing file to delete.")
+        }
+        
+        AVAssetExportSession.determineCompatibility(ofExportPreset: preset, with: asset, outputFileType: outFileType) { [self] isCompatible in
+            guard isCompatible else {
+                fatalError("Incompatable type")
+            }
+            
+            guard let exportSession = AVAssetExportSession(asset: asset, presetName: preset) else {
+                return
+            }
+            exportSession.outputFileType = outFileType
+            exportSession.shouldOptimizeForNetworkUse = true
+            
+            exportSession.outputURL = outputURL
+            let startTime = CFAbsoluteTimeGetCurrent()
+            exportSession.exportAsynchronously {
+                let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
+                NSLog("BLE Test Transcoding status: \(exportSession.status == AVAssetExportSession.Status.completed)")
+                NSLog("BLE Test Transcode time for file \(outputURL.path) = \(timeElapsed) s")
+                self.inProgress = false
+            }
+        }
     }
     
     func transcodeVideo(hardwareDecode: Bool, hardwareEncode: Bool) {
         
         let outputName = getOutputFileName()
         let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last
-        let outputPath = documentsDirectory!.appendingPathComponent("\(outputName).mp4" ).path
+        let outputURL = documentsDirectory!.appendingPathComponent("\(outputName).mp4" )
+
+        do {
+            try FileManager.default.removeItem(at: outputURL)
+        } catch _ as NSError {
+            NSLog("No existing file to delete.")
+        }
+        
         let decoderFormat = hardwareDecode ? "-hwaccel videotoolbox -c:v hevc" : "-c:v hevc"
         let encoderFormat = hardwareEncode ? "-c:v h264_videotoolbox -b:v 2M" : "-c:v libx264"
-        let command = String(format: "\(decoderFormat) -i \(self.inputUrl!.path) \(encoderFormat) -c:a copy \(outputPath)")
+        let command = String(format: "\(decoderFormat) -i \(self.inputUrl!.path) \(encoderFormat) -c:a copy \(outputURL.path)")
         NSLog("BLE Test: FFMPEG command: \(command)")
         // Start timer
         let startTime = CFAbsoluteTimeGetCurrent()
@@ -126,9 +145,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return
             }
             let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
-            
-            assert(returnCode.isValueSuccess())
-            
+                        
             NSLog("BLE Test Transcode time for file \(outputName) = \(timeElapsed) s")
             self.inProgress = false
         } withLogCallback: { logs in
@@ -173,8 +190,8 @@ extension AppDelegate: CBCentralManagerDelegate {
     
     // MARK: - Discover
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        NSLog("Function: \(#function),Line: \(#line)")
-        if peripheral.name != "raspberrypi" {
+        NSLog("Discovered peripheral, \(advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? "")")
+        if advertisementData[CBAdvertisementDataLocalNameKey] as? String ?? nil != "Mac Peripheral Test" {
             return
         }
         
@@ -241,7 +258,7 @@ extension AppDelegate: CBPeripheralDelegate {
         NSLog("Found \(characteristics.count) characteristics.")
         
         for characteristic in characteristics {
-            
+            NSLog("Characteristic \(characteristic.uuid)")
             if characteristic.uuid.isEqual(CBUUIDs.BLE_Characteristic_uuid_Rx)  {
                 
                 rxCharacteristic = characteristic
@@ -282,10 +299,10 @@ extension AppDelegate: CBPeripheralDelegate {
         if(inProgress) {
             return
         }
-        if(count % 10 == 0) {
+        if(count % 3 == 0) {
             NSLog("BLE Test: Beginning Trancoding")
             inProgress = true
-            transcodeVideo(hardwareDecode: false, hardwareEncode: false)
+            transcodeVideoAV()
         }
     }
     
